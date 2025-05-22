@@ -44,8 +44,11 @@ async def startup():
         password=DB_PASSWORD,
         database=DB_NAME,
         min_size=1,
-        max_size=5
+        max_size=5,
+        timeout=10,
+        ssl=False  
     )
+
 
 @app.on_event("shutdown")
 async def shutdown():
