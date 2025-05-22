@@ -3,7 +3,6 @@ import asyncpg
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import openai
-from api.aws_secrets import get_secret
 
 
 app = FastAPI()
@@ -19,14 +18,13 @@ app.add_middleware(
 secret_name = "chatbot-secrets"
 region_name = "us-east-1"
 
-secrets = get_secret(secret_name, region_name)
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = int(os.getenv("DB_PORT", 5432))
+DB_NAME = os.getenv("DB_NAME")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-DB_HOST = secrets.get("DB_HOST")
-DB_PORT = int(secrets.get("DB_PORT", 5432))
-DB_NAME = secrets.get("DB_NAME")
-DB_USER = secrets.get("DB_USER")
-DB_PASSWORD = secrets.get("DB_PASSWORD")
-OPENAI_API_KEY = secrets.get("OPENAI_API_KEY")
 
 openai.api_key = OPENAI_API_KEY
 
