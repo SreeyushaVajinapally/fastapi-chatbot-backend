@@ -3,7 +3,8 @@ import asyncpg
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import openai
-
+import ssl
+import logging
 
 app = FastAPI()
 
@@ -37,17 +38,23 @@ pool = None
 @app.on_event("startup")
 async def startup():
     global pool
-    pool = await asyncpg.create_pool(
-        host=DB_HOST,
-        port=DB_PORT,
-        user=DB_USER,
-        password=DB_PASSWORD,
-        database=DB_NAME,
-        min_size=1,
-        max_size=5,
-        timeout=10,
-        ssl=False  
-    )
+    ssl_context = ssl.create_default_context()
+    try:
+        pool = await asyncpg.create_pool(
+            host=DB_HOST,
+            port=DB_PORT,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            database=DB_NAME,
+            min_size=1,
+            max_size=5,
+            timeout=10,
+            ssl=ssl_context
+        )
+        logging.info("Database connection pool created successfully.")
+    except Exception as e:
+        logging.error(f"Failed to create DB pool: {e}")
+        raise
 
 
 @app.on_event("shutdown")
