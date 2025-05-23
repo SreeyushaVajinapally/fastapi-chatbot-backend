@@ -6,6 +6,7 @@ import openai
 import ssl
 import logging
 
+logging.basicConfig(level=logging.INFO)
 app = FastAPI()
 
 app.add_middleware(
@@ -38,7 +39,7 @@ pool = None
 @app.on_event("startup")
 async def startup():
     global pool
-    ssl_context = ssl.create_default_context()
+    ssl_context = ssl.create_default_context(cafile="certs/us-east-1-bundle.pem")
     try:
         pool = await asyncpg.create_pool(
             host=DB_HOST,

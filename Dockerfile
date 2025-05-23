@@ -4,8 +4,9 @@ WORKDIR /app
 
 COPY ./api /app/api
 
-COPY requirements.txt /app/requirements.txt
+COPY ./certs /app/certs
 
+COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8000
